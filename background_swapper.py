@@ -30,9 +30,9 @@ def get_files_names_from_arguments():
 
   return input_img_name,  background_img_name
 
-def read_required_images(input_img_path, background_img_path):  
-  input_img = cv2.imread(INPUT_IMG_DIR + input_img_path)
-  background_img = cv2.imread(INPUT_IMG_DIR + background_img_path)
+def read_required_images(input_img_name, background_img_name):  
+  input_img = cv2.imread(INPUT_IMG_DIR + input_img_name)
+  background_img = cv2.imread(INPUT_IMG_DIR + background_img_name)
 
   if input_img is None:
     raise ValueError('Input image file not found.')
