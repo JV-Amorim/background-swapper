@@ -9,6 +9,16 @@ LOWER_MASK_BOUNDARY = np.array([40, 100, 20])
 UPPER_MASK_BOUNDARY = np.array([75, 256, 256])
 
 
+def main():
+  input_img_name, background_img_name = get_files_names_from_arguments()
+  input_img, background_img = read_required_images(input_img_name, background_img_name)
+
+  result_img = swap_image_background(input_img, background_img)
+
+  save_result_image_with_same_name_of_input_image(result_img, input_img_name)
+  print('Success! The result image have been saved in output directory.')
+
+
 def get_files_names_from_arguments():
   arguments = sys.argv[1:]
 
@@ -43,7 +53,9 @@ def swap_image_background(input_img, background_img):
   masked_hsv_input_img = apply_mask_to_input_image(inverted_mask, hsv_input_img)
   masked_hsv_background_img = apply_mask_to_background_image(mask, hsv_background_img)
 
-  return generate_result_image(masked_hsv_input_img, masked_hsv_background_img)
+  result_img = generate_result_image(masked_hsv_input_img, masked_hsv_background_img)
+
+  return cv2.cvtColor(result_img, cv2.COLOR_HSV2BGR)
 
 
 def resize_background_image_to_same_size_of_input_image(background_img, input_img):
@@ -74,15 +86,8 @@ def generate_result_image(masked_hsv_input_img, masked_hsv_background_img):
   return cv2.add(masked_hsv_input_img, masked_hsv_background_img)
 
 def save_result_image_with_same_name_of_input_image(result_img, input_img_name):
-  output_img_data = cv2.cvtColor(result_img, cv2.COLOR_HSV2BGR)
-  cv2.imwrite(OUTPUT_IMG_DIR + input_img_name, output_img_data)
+  cv2.imwrite(OUTPUT_IMG_DIR + input_img_name, result_img)
 
 
 if __name__ == '__main__':
-  input_img_name, background_img_name = get_files_names_from_arguments()
-  input_img, background_img = read_required_images(input_img_name, background_img_name)
-
-  result_img = swap_image_background(input_img, background_img)
-
-  save_result_image_with_same_name_of_input_image(result_img, input_img_name)
-  print('Success! The result image have been saved in output directory.')
+  main()
