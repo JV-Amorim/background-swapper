@@ -1,5 +1,4 @@
 import cv2
-import matplotlib.pyplot as plt
 import numpy as np
 import sys
 
@@ -31,6 +30,21 @@ def read_required_images(input_img_path, background_img_path):
     raise ValueError('Background image file not found.')
 
   return input_img, background_img
+
+
+def swap_image_background(input_img, background_img):
+  background_img = resize_background_image_to_same_size_of_input_image(background_img, input_img)
+
+  hsv_input_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2HSV)
+  hsv_background_img = cv2.cvtColor(background_img, cv2.COLOR_BGR2HSV)
+
+  mask, inverted_mask = generate_masks_from_input_image(hsv_input_img)
+
+  masked_hsv_input_img = apply_mask_to_input_image(inverted_mask, hsv_input_img)
+  masked_hsv_background_img = apply_mask_to_background_image(mask, hsv_background_img)
+
+  return generate_result_image(masked_hsv_input_img, masked_hsv_background_img)
+
 
 def resize_background_image_to_same_size_of_input_image(background_img, input_img):
   input_img_height = input_img.shape[0]
@@ -68,17 +82,7 @@ if __name__ == '__main__':
   input_img_name, background_img_name = get_files_names_from_arguments()
   input_img, background_img = read_required_images(input_img_name, background_img_name)
 
-  background_img = resize_background_image_to_same_size_of_input_image(background_img, input_img)
+  result_img = swap_image_background(input_img, background_img)
 
-  hsv_input_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2HSV)
-  hsv_background_img = cv2.cvtColor(background_img, cv2.COLOR_BGR2HSV)
-
-  mask, inverted_mask = generate_masks_from_input_image(hsv_input_img)
-
-  masked_hsv_input_img = apply_mask_to_input_image(inverted_mask, hsv_input_img)
-  masked_hsv_background_img = apply_mask_to_background_image(mask, hsv_background_img)
-
-  result_img = generate_result_image(masked_hsv_input_img, masked_hsv_background_img)
   save_result_image_with_same_name_of_input_image(result_img, input_img_name)
-
   print('Success! The result image have been saved in output directory.')
