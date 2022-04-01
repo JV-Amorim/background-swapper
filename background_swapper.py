@@ -3,8 +3,8 @@ import numpy as np
 import sys
 
 
-INPUT_IMG_DIR = 'input/'
-OUTPUT_IMG_DIR = 'output/'
+INPUT_DIR = 'input/'
+OUTPUT_DIR = 'output/'
 LOWER_MASK_BOUNDARY = np.array([40, 100, 20])
 UPPER_MASK_BOUNDARY = np.array([75, 256, 256])
 
@@ -31,8 +31,8 @@ def get_files_names_from_arguments():
   return input_img_name,  background_img_name
 
 def read_required_images(input_img_name, background_img_name):  
-  input_img = cv2.imread(INPUT_IMG_DIR + input_img_name)
-  background_img = cv2.imread(INPUT_IMG_DIR + background_img_name)
+  input_img = cv2.imread(INPUT_DIR + input_img_name)
+  background_img = cv2.imread(INPUT_DIR + background_img_name)
 
   if input_img is None:
     raise ValueError('Input image file not found.')
@@ -86,7 +86,7 @@ def generate_result_image(masked_hsv_input_img, masked_hsv_background_img):
   return cv2.add(masked_hsv_input_img, masked_hsv_background_img)
 
 def save_result_image_with_same_name_of_input_image(result_img, input_img_name):
-  cv2.imwrite(OUTPUT_IMG_DIR + input_img_name, result_img)
+  cv2.imwrite(OUTPUT_DIR + input_img_name, result_img)
 
 
 if __name__ == '__main__':
