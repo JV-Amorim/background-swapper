@@ -1,7 +1,7 @@
 import cv2
 import os
 import sys
-from background_swapper import INPUT_DIR, OUTPUT_DIR, swap_image_background
+from image_background_swapper import INPUT_DIR, OUTPUT_DIR, swap_image_background
 from moviepy.editor import *
 
 
